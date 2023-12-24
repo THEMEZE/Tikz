@@ -14,7 +14,7 @@ if [ $? -eq 0 ]; then
     echo "Le package perspective a été installé avec succès."
 else
     echo "Erreur lors de l'installation du package perspective."
-    exit 1
+    #exit 1
 fi
 
 pdflatex  Perspective.tex
