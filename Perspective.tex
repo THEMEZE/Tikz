@@ -1,0 +1,73 @@
+\documentclass[tikz, border=2mm]{standalone}
+
+
+\begin{document}
+\usetikzlibrary{perspective}
+\newcommand\simplecuboid[3]{%
+  \fill[gray!80!white] (tpp cs:x=0,y=0,z=#3)
+    -- (tpp cs:x=0,y=#2,z=#3)
+    -- (tpp cs:x=#1,y=#2,z=#3)
+    -- (tpp cs:x=#1,y=0,z=#3) -- cycle;
+  \fill[gray]  (tpp cs:x=0,y=0,z=0)
+    -- (tpp cs:x=0,y=0,z=#3)
+    -- (tpp cs:x=0,y=#2,z=#3)
+    -- (tpp cs:x=0,y=#2,z=0) -- cycle;
+  \fill[gray!50!white] (tpp cs:x=0,y=0,z=0)
+    -- (tpp cs:x=0,y=0,z=#3)
+    -- (tpp cs:x=#1,y=0,z=#3)
+    -- (tpp cs:x=#1,y=0,z=0) -- cycle;}
+\newcommand{\simpleaxes}[3]{%
+  \draw[->] (-0.5,0,0) -- (#1,0,0) node[pos=1.1]{x};
+  \draw[->] (0,-0.5,0) -- (0,#2,0) node[pos=1.1]{y};
+  \draw[->] (0,0,-0.5) -- (0,0,#3) node[pos=1.1]{z};}
+
+
+
+
+\newcommand{\test}[9]{
+%Cube ( 0 < x < #1 , 0 < y < #2 , 0 < z < #3 )
+%perspective={p = {(#4,0,0)},q = {(0,#5,0)},r = {(0,0,#6)}}
+%3d view={#7}{#8}
+%scale = 1/#9 
+\begin{scope}[
+	3d view={#7}{#8},
+  	perspective={
+    p = {(#4,0,0)},
+    q = {(0,#5,0)},
+    r = {(0,0,#6)}},
+  	scale=1,
+  	vanishing point/.style={fill,circle,inner sep=2pt}]
+	]
+	
+	\simplecuboid{#1}{#2}{#3}
+  	\simpleaxes{#9}{#9}{#9}
+
+  	\node[vanishing point,label = right:p] (p) at (#4,0,0){};
+  	\node[vanishing point,label = left:q] (q) at (0,#5,0){};
+  	\node[vanishing point,label = above:r] (r) at (0,0,#6){};
+
+  	\begin{scope}[dotted]
+    	\foreach \y in {0,#2}{
+      	\foreach \z in {0,#3}{
+        \draw (tpp cs:x=0,y=\y,z=\z) -- (p.center);}}
+    \foreach \x in {0,#1}{
+      	\foreach \z in {0,#3}{
+        \draw (tpp cs:x=\x,y=0,z=\z) -- (q.center);}}
+    \foreach \x in {0,#1}{
+      	\foreach \y in {0,#2}{
+        \draw (tpp cs:x=\x,y=\y,z=0) -- (r.center);}}
+  \end{scope}
+	
+\end{scope}
+
+}
+
+\begin{tikzpicture}
+	%\filldraw [shift={(0,0)} ,line width=0.5ex,rounded corners = 0ex,color=red,fill=red!40 , ] (-5,-5) rectangle (5,  5);
+	\clip (-5,-5) rectangle (5,  5);
+	\test{1}{1}{1}{100}{100}{100}{0}{180}{2}		
+\end{tikzpicture}
+
+
+
+\end{document}
